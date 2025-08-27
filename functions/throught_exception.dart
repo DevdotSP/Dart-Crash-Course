@@ -1,38 +1,40 @@
 import 'dart:io';
 
 void main() {
-  // info();
+  // Run the age calculator program
   ageCalculator();
 }
 
-void info() {
-  try {
-    for (var i = 0; i <= 10; i++) {
-      if (i == 5) {
-        throw FormatException;
-      }
-      print('i=$i');
-    }
-  } catch (e) {
-    print(e);
-  }
-}
-
+// 🔹 Age calculator function
+// Continuously asks the user for their birth year until valid input is given
 void ageCalculator() {
   while (true) {
     try {
-      print('Enter Your Birthday Year:');
-      var birth_year = stdin.readLineSync();
-      var age = DateTime.now().year - int.parse(birth_year!);
-      print(age);
-      if (age < 0) throw FormatException();
-      if (age < 6) throw Exception;
-      print('Your Age is $age Years old');
-      break;
-    } on FormatException {
-      print('Invalid Data... try again');
+      // Ask user to enter birth year
+      print('Enter your birth year:');
+      var input = stdin.readLineSync();
+
+      // Convert input to integer
+      var birthYear = int.parse(input!);
+
+      // Calculate age
+      var age = DateTime.now().year - birthYear;
+
+      // Throw exception if birth year is in the future
+      if (age < 0) throw FormatException('Birth year cannot be in the future!');
+
+      // Throw exception if age is less than 6
+      if (age < 6) throw Exception('Age must be at least 6 years old');
+
+      // Print valid age
+      print('Your age is $age years old');
+      break; // Exit loop after successful calculation
+    } on FormatException catch (e) {
+      // Handles invalid input or future birth years
+      print('Invalid input: $e. Please try again.');
     } catch (e) {
-      print('Age under 6 years old');
+      // Handles other exceptions (e.g., age < 6)
+      print(e);
     }
   }
 }

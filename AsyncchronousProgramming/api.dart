@@ -1,13 +1,21 @@
 import 'package:http/http.dart' as http;
 import 'dart:convert';
 
+/// Entry point of the program
 void main() async {
-  var data = await fetchAll(); // Await the result of fetchAll()
-  var products =
-      json.decode(data)['products']; // Extracting the 'products' array
-  var firstProduct = products[0]; // Accessing the first product
+  // 🔹 Fetch product data from the API
+  var data = await fetchAll(); 
 
-  // Accessing various fields of the first product
+  // 🔹 Decode the raw JSON string into a Dart Map
+  var decoded = json.decode(data);
+
+  // 🔹 Extract the 'products' array from the JSON
+  var products = decoded['products'];
+
+  // 🔹 Get the first product (index 0)
+  var firstProduct = products[0];
+
+  // 🔹 Extract fields from the first product
   var id = firstProduct['id'];
   var title = firstProduct['title'];
   var description = firstProduct['description'];
@@ -20,41 +28,44 @@ void main() async {
   var thumbnail = firstProduct['thumbnail'];
   var images = firstProduct['images'];
 
-  // Printing some of the fields for demonstration
-  print('Title: $id');
+  // 🔹 Print some selected fields
+  print('--- First Product Info ---');
+  print('ID: $id');
   print('Title: $title');
   print('Description: $description');
   print('Price: $price');
+  print('Discount: $discountPercentage%');
+  print('Rating: $rating');
+  print('Stock: $stock');
+  print('Brand: $brand');
+  print('Category: $category');
+  print('Thumbnail: $thumbnail');
+  print('Images: $images');
+  print('--------------------------\n');
 
-  for (var i = 0; i < 30; i++) {
-    print(products[i]['id']);
-    print(products[i]['title']);
-    print(products[i]['description']);
-    print(products[i]['price']);
+  // 🔹 Print first 30 products summary
+  print('--- First 30 Products ---');
+  for (var i = 0; i < 30 && i < products.length; i++) {
+    print('ID: ${products[i]['id']}');
+    print('Title: ${products[i]['title']}');
+    print('Description: ${products[i]['description']}');
+    print('Price: ${products[i]['price']}');
     print('---------------');
   }
 }
 
+/// Fetch all products from the DummyJSON API
 Future<String> fetchAll() async {
   final url = 'https://dummyjson.com/products';
+
+  // 🔹 Make HTTP GET request
   var res = await http.get(Uri.parse(url));
+
   if (res.statusCode == 200) {
-    return res.body; // Return the raw JSON string
+    // 🔹 Return the raw JSON response body
+    return res.body; 
   } else {
-    print('Error');
-    return ''; // Return an empty string in case of error
+    print('Error fetching products. Status code: ${res.statusCode}');
+    return ''; // Return empty string on error
   }
 }
-
-//return object of json
-
-// Future<dynamic> fetchAll() async {
-//   final url = 'https://dummyjson.com/products';
-//   var res = await http.get(Uri.parse(url));
-//   if (res.statusCode == 200) {
-//     var obj = json.decode(res.body);
-//     return obj;
-//   } else {
-//     print('Error');
-//   }
-// }
